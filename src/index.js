@@ -6,10 +6,7 @@ import * as serviceWorker from './serviceWorker';
 // eslint-disable-next-line
 import tachyons from 'tachyons';
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+ReactDOM.render( <App />,
   document.getElementById('root')
 );
 
