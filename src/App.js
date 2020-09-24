@@ -35,8 +35,8 @@ const App = ({currentUser}) => {
     );
 }
 
-const mapStateToProps = ({user: {currentUser}}) => ({
+const mapStateToProps = ({currentUser}) => ({
   currentUser
-}) 
+})
 
 export default connect(mapStateToProps)(App);

@@ -4,9 +4,7 @@ import ImageLinkForm from '../ImageLinkForm/ImageLinkForm';
 import Rank from '../Rank/Rank';
 import FaceRecognition from '../FaceRecognition/FaceRecognition';
 import { connect } from 'react-redux';
-import { selectCurrentUser } from '../../redux/user/user.selector';
-import { setCurrentUser } from '../../redux/user/user.actions';
-import { createStructuredSelector } from 'reselect';
+import { setCurrentUser } from '../../redux/actions';
 
 class HomePage extends React.Component {
     constructor() {
@@ -85,13 +83,11 @@ class HomePage extends React.Component {
     }
 }
 
-const mapStateToProps = createStructuredSelector({
-  currentUser: selectCurrentUser
-});
+const mapStateToProps = ({currentUser}) => ({currentUser});
 
 const mapDispatchToProps = dispatch => ({
   setCurrentUser: user => dispatch(setCurrentUser(user))
-})
+});
  
 export default connect(
   mapStateToProps,

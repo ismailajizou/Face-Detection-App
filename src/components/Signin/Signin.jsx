@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { setCurrentUser } from '../../redux/user/user.actions';
+import { setCurrentUser } from '../../redux/actions';
 
 
 class Signin extends React.Component {

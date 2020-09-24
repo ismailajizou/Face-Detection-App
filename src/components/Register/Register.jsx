@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { setCurrentUser } from '../../redux/user/user.actions';
+import { setCurrentUser } from '../../redux/actions';
 
 class Register extends React.Component {
   constructor() {
