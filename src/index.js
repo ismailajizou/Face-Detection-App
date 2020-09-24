@@ -5,8 +5,16 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 // eslint-disable-next-line
 import tachyons from 'tachyons';
+import { Provider } from 'react-redux';
+import { store } from './redux/store';
+import { BrowserRouter } from 'react-router-dom';
 
-ReactDOM.render( <App />,
+ReactDOM.render( 
+<Provider store={store}>
+  <BrowserRouter> 
+    <App />
+  </BrowserRouter>
+</Provider>,
   document.getElementById('root')
 );
 
