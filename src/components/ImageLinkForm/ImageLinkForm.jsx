@@ -1,13 +1,10 @@
 import React from 'react';
 import './ImageLinkForm.css';
 
-const ImageLinkForm = ({ onInputChange, onBtnSubmit }) => {
-
-    return (
-
+const ImageLinkForm = ({ onInputChange, onBtnSubmit }) => (
         <div>
             <p className='f3'>
-                {'This magic brain will detect faces in your pictures. Give it a try.'}
+                This magic brain will detect faces in your pictures. Give it a try !
             </p>
             <div className='center'>
                 <div className='form center pa4 br3 shadow-5'>
@@ -17,14 +14,8 @@ const ImageLinkForm = ({ onInputChange, onBtnSubmit }) => {
                 onClick={onBtnSubmit}
                 >Detect</button>
                 </div>
-                
             </div>
         </div>
-
-
-
     );
-
-}
 
 export default ImageLinkForm; 

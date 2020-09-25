@@ -3,14 +3,20 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { setCurrentUser } from '../../redux/actions';
 
-
+const noErrors = {
+  emptyField: false,
+  noUser: false
+}
 class Signin extends React.Component {
-
   constructor() {
     super()
     this.state = {
       email: '',
-      password: ''
+      password: '',
+      errors: {
+        emptyField: false,
+        noUser: false
+      }
     }
   }
 
@@ -18,36 +24,42 @@ class Signin extends React.Component {
     const {name, value} = event.target;
     this.setState({[name]: value});
   }
-
   
   onSubmitSignIn = event => {
     event.preventDefault();
     const {history, setCurrentUser} = this.props;
     const {email, password} = this.state;
-    fetch('https://vast-bastion-34313.herokuapp.com/signin', {
+    if (!email.length || !password.length) {
+      this.setState({errors: {...noErrors, emptyField: true}});
+    } else {
+      fetch('https://vast-bastion-34313.herokuapp.com/signin', {
       method: 'post',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        email,
-        password
+      body: JSON.stringify({ email, password })
       })
-    })
-    .then(res => res.json())
-    .then(user => {
-      if(user.id) {
-        setCurrentUser(user)
-        history.push('/');
-      }
-    })  
+      .then(res => res.json())
+      .then(user => {
+        if(user.id) {
+          setCurrentUser(user);
+          history.push('/');
+        } else {
+          this.setState({errors: {...noErrors, noUser: true}});
+        }
+      })
+    }
   }
 
 render(){
+  const {emptyField, noUser} = this.state.errors;
   return(
     <form className="br3 ba b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center" onSubmit={this.onSubmitSignIn}>
     <main className="pa4 black-80">
   <div className="measure">
     <fieldset className="ba b--transparent ph0 mh0">
       <legend className="f1 fw6 ph0 mh0">Sign In</legend>
+      { emptyField ? <p className='red fw5'>Empty field</p> 
+      : noUser ? <p className='red fw5'>No such user</p> 
+      : null }
       <div className="mt3">
         <label className="db fw6 lh-copy f6">Email</label>
         <input 
@@ -83,7 +95,6 @@ render(){
 );
 }
 }
-
 
 const mapDispatchToProps = dispatch => ({
   setCurrentUser: user => dispatch(setCurrentUser(user))
