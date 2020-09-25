@@ -37,6 +37,7 @@ onSubmitSignIn = event => {
     } else if (password.length < 5) {
       this.setState({errors: {...noErrors, unvalidPwd: true}});
     } else {
+      this.setState({errors: noErrors});
       fetch('https://vast-bastion-34313.herokuapp.com/register', {
       method: 'post',
       headers: {'Content-Type': 'application/json'},
@@ -48,7 +49,7 @@ onSubmitSignIn = event => {
         setCurrentUser(user);
         history.push('/');
       } else {
-        this.setState({errors: {existingEmail: true}})
+        this.setState({errors: {...noErrors, existingEmail: true}});
       }
     })
     } 
@@ -63,7 +64,7 @@ render(){
     <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
       <legend className="f1 fw6 ph0 mh0">Register</legend>
       {existingEmail ? <p className='red fw5'>Email already exists</p> 
-        : unvalidPwd ?  <p className='red fw5'>Unvalid password</p> 
+        : unvalidPwd ?  <p className='red fw5'>Unvalid password: must contain at least 5 characters</p> 
         : emptyField ? <p className='red fw5'>Empty field</p> 
         : null }
       <div className="mt3">

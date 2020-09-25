@@ -32,6 +32,7 @@ class Signin extends React.Component {
     if (!email.length || !password.length) {
       this.setState({errors: {...noErrors, emptyField: true}});
     } else {
+      this.setState({errors: noErrors});
       fetch('https://vast-bastion-34313.herokuapp.com/signin', {
       method: 'post',
       headers: {'Content-Type': 'application/json'},
