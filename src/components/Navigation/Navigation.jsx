@@ -1,25 +1,37 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { withRouter, Link} from 'react-router-dom';
+import { toggleMenu } from '../../redux/menu/menu-actions';
+import DropdownMenu from '../DropdownMenu/DropdownMenu';
+import arrayBufferToBase64 from '../../utils/utils';
 
-const NavigationContainer = component => <nav style={{display: 'flex', justifyContent: 'flex-end'}}>{component}</nav>
-
-const Navigation = ({ location }) => {
-    const linkClass = 'f3 link dim black pa3 pointer';
-    if (location.pathname === '/') {
+const Navigation = ({location, dispatch, hidden, currentUser}) => {
+    if (location.pathname === '/' && currentUser) {
         return (
-            NavigationContainer(
-                <Link to='/signin' className={linkClass} >Sign Out</Link>
-            ) 
+            <>
+                <nav style={{display: 'flex', justifyContent: 'flex-end'}}>
+                        <div
+                        className="pa2 tc">
+                            <img 
+                            onClick={() => dispatch(toggleMenu())}
+                            src={`data:image/jpg;base64,${arrayBufferToBase64(currentUser.profileimage.data)}`}
+                            className="br-100 ba h3 w3 dib pointer profile" alt="avatar" />
+                        </div>
+                </nav>
+                <DropdownMenu hidden={hidden} />
+            </>
         );
     } else {
         return (
-            NavigationContainer(
-                <>
-                <Link to='/signin' className={linkClass}>Sign In</Link>
-                <Link to='/register' className={linkClass}>Register</Link>
-                </>
-            )
-        );
+            <nav style={{display: 'flex', justifyContent: 'flex-end'}}>
+                <Link to='/signin' style={{outline: 'none'}} className='f3 link dim black pa3 pointer'>Sign In</Link>
+                <Link to='/register' style={{outline: 'none'}} className='f3 link dim black pa3 pointer'>Register</Link>
+            </nav>
+        )
     }
 }
-export default withRouter(Navigation);
+
+
+const mapStateToProps = ({menu: {hidden}, user: {currentUser}}) => ({hidden, currentUser})
+
+export default withRouter(connect(mapStateToProps)(Navigation));

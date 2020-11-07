@@ -1,0 +1,74 @@
+.modal-container{
+    position: absolute;
+    max-width: 700px;
+    /* width: 70vw; */
+    height: 60vh;
+    border: 2px solid black;
+    background-color: white;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-username{
+    display: flex;
+    justify-content: space-evenly;
+}
+.profile-change{
+    margin: 13px;
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+}
+.profile-change:hover{
+    opacity: 0.9;
+}
+.username{
+margin: 3.3rem;
+font-size: 23px;
+font-weight: 700;
+color: blueviolet;
+}
+.date-joined{
+    text-align: center;
+    color: lightslategray;
+    font-size: 20px;
+    font-weight: bold;
+}
+.btns-container{
+    display: flex;
+    justify-content: space-evenly;
+    justify-items: center;
+    padding: 15px;
+    margin: 10px;
+
+}
+.btns-container button{
+padding: 10px 20px;
+font-size: 18px;
+font-weight: bolder;
+}
+button:focus{
+outline: none;
+}
+.submit-profile{
+background-color: transparent;
+border: 3px solid rgb(49, 49, 236);
+border-radius: 20px;
+color: rgb(49, 49, 236);
+align-content: flex-end;
+}
+.cancel-modal{
+    background-color: transparent;
+    border: 3px solid red;
+    border-radius: 20px;
+    color: red;
+}
+.submit-profile:hover{
+    background-color: rgb(49, 49, 236);
+    color: white;
+}
+.cancel-modal:hover{
+    background-color: red;
+    color: white;
+}

@@ -4,7 +4,11 @@ import ImageLinkForm from '../ImageLinkForm/ImageLinkForm';
 import Rank from '../Rank/Rank';
 import FaceRecognition from '../FaceRecognition/FaceRecognition';
 import { connect } from 'react-redux';
-import { setCurrentUser } from '../../redux/actions';
+import { setCurrentUser } from '../../redux/user/user-actions';
+import ModalPopup from '../Modal/Modal';
+import { createStructuredSelector } from 'reselect';
+import { selectCurrentUser } from '../../redux/user/user-selectors';
+
 
 class HomePage extends React.Component {
     constructor() {
@@ -12,7 +16,7 @@ class HomePage extends React.Component {
         this.state = {
             input: '',
             imageUrl: '',
-            box: {}
+            box: {},
         }
     }
     calculateFaceLocation = (data) => {
@@ -36,7 +40,7 @@ class HomePage extends React.Component {
       const { currentUser } = this.props;
       const { input }= this.state;
       this.setState({imageUrl: input});
-      fetch('https://vast-bastion-34313.herokuapp.com/imageurl', {
+      fetch('http://localhost:3000/imageurl', {
               method: 'post',
               headers: {'Content-Type': 'application/json'},
               body: JSON.stringify({ input })
@@ -44,7 +48,7 @@ class HomePage extends React.Component {
         .then(response => response.json())
         .then(response => {
           if(response) {
-            fetch('https://vast-bastion-34313.herokuapp.com/image', {
+            fetch('http://localhost:3000/image', {
               method: 'put',
               headers: {'Content-Type': 'application/json'},
               body: JSON.stringify({ id: currentUser.id })
@@ -68,6 +72,7 @@ class HomePage extends React.Component {
     const {currentUser} = this.props;
     return ( 
         <>
+        <ModalPopup />
         <Logo />
         <Rank name={currentUser.name} entries={currentUser.entries}/>
         <ImageLinkForm 
@@ -80,7 +85,9 @@ class HomePage extends React.Component {
     }
 }
 
-const mapStateToProps = ({currentUser}) => ({currentUser});
+const mapStateToProps = createStructuredSelector({
+  currentUser: selectCurrentUser
+})
 
 const mapDispatchToProps = dispatch => ({
   setCurrentUser: user => dispatch(setCurrentUser(user))

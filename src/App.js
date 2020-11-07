@@ -5,6 +5,8 @@ import Spinner from './components/Spinner/Spinner';
 import Particles from 'react-particles-js';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+import { selectCurrentUser } from './redux/user/user-selectors';
 
 const Signin = lazy(() => import('./components/Signin/Signin'));
 const Register = lazy(() => import('./components/Register/Register'));
@@ -15,7 +17,7 @@ const particlesParams =  {particles: {number: {value: 120, density: {enable: tru
 const App = ({currentUser}) => {
   return(
     <div className="App">
-      <Particles 
+      <Particles
         className='particles'
         params={particlesParams} />
       <Navigation />
@@ -35,6 +37,8 @@ const App = ({currentUser}) => {
     );
 }
 
-const mapStateToProps = ({currentUser}) => ({currentUser});
+const mapStateToProps = createStructuredSelector({
+  currentUser: selectCurrentUser
+});
 
 export default connect(mapStateToProps)(App);

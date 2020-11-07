@@ -1,7 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { setCurrentUser } from '../../redux/actions';
-
+import { setCurrentUser } from '../../redux/user/user-actions';
+// eslint-disable-next-line
+const LINK_TO_DBHOST = 'https://vast-bastion-34313.herokuapp.com/register'
 const noErrors = {
   unvalidPwd: false,
   existingEmail: false,
@@ -15,6 +16,7 @@ class Register extends React.Component {
       email: '',
       password: '',
       name: '',
+      profileimage: null,
       errors: {
         unvalidPwd: false,
         existingEmail: false,
@@ -31,17 +33,17 @@ onInputChange = event => {
 onSubmitSignIn = event => {
     event.preventDefault();
     const { history, setCurrentUser } = this.props;
-    const {email, password, name} = this.state;
+    const {email, password, name, profileimage} = this.state;
     if (!email.length || !password.length || !name.length) {
       this.setState({errors: {...noErrors, emptyField: true}});
     } else if (password.length < 5) {
       this.setState({errors: {...noErrors, unvalidPwd: true}});
     } else {
       this.setState({errors: noErrors});
-      fetch('https://vast-bastion-34313.herokuapp.com/register', {
+      fetch('http://localhost:3000/register', {
       method: 'post',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ email, password, name })
+      body: JSON.stringify({ email, password, name, profileimage})
     })
     .then(res => res.json())
     .then(user => {

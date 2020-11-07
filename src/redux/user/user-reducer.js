@@ -1,8 +1,13 @@
 const INITIAL_STATE = {
     currentUser: null
+    // {
+    //     name: 'ismail',
+    //     joined: '12-07-2002',
+    //     entries: 2
+    // }
 }
 
-const reducer = (state = INITIAL_STATE , action) => {
+const userReducer = (state = INITIAL_STATE , action) => {
     switch (action.type) {
         case 'SET_CURRENT_USER':
             return {
@@ -14,4 +19,4 @@ const reducer = (state = INITIAL_STATE , action) => {
     }
 }
 
-export default reducer;
+export default userReducer;
