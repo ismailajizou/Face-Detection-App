@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { toggleModal } from '../../redux/modal/modal-actions';
 import arrayBufferToBase64 from '../../utils/utils';
 import {setProfile} from '../../redux/profile/profile-actions';
+import { setCurrentUser } from '../../redux/user/user-actions';
 
 
 class ModalContent extends React.Component {
@@ -15,12 +16,12 @@ class ModalContent extends React.Component {
       }
       
     onSubmitChangeProfile = e  => {
-        const { image } = this.props;
+        const { image, dispatch, currentUser } = this.props;
         const fd = new FormData();
         fd.append('image', image, image.name);
         axios
-        .post(`'https://vast-bastion-34313.herokuapp.com/changeProfilePic`, fd)
-        .then(res => console.log(res.data))
+        .post('https://vast-bastion-34313.herokuapp.com/changeProfilePic', fd)
+        .then(res => dispatch(setCurrentUser({...currentUser,profileimage: res.data[0]})))
         .catch(err => console.log(err));
     
     }
