@@ -3,8 +3,6 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { setCurrentUser } from '../../redux/user/user-actions';
 
-// eslint-disable-next-line
-const LINK_TO_DBHOST = 'https://vast-bastion-34313.herokuapp.com/signin';
 
 const noErrors = {
   emptyField: false,
@@ -36,7 +34,7 @@ class Signin extends React.Component {
       this.setState({errors: {...noErrors, emptyField: true}});
     } else {
       this.setState({errors: noErrors});
-      fetch('http://localhost:3000/signin', {
+      fetch('https://vast-bastion-34313.herokuapp.com/signin', {
       method: 'post',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({ email, password })

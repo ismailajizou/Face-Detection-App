@@ -1,10 +1,5 @@
 const INITIAL_STATE = {
     currentUser: null
-    // {
-    //     name: 'ismail',
-    //     joined: '12-07-2002',
-    //     entries: 2
-    // }
 }
 
 const userReducer = (state = INITIAL_STATE , action) => {
