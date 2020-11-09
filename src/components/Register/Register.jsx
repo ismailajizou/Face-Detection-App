@@ -36,7 +36,7 @@ class Register extends React.Component {
     const { email, password, name } = this.state;
     if (!email.length || !password.length || !name.length) {
       this.setState({ errors: { ...noErrors, emptyField: true } });
-    } else if (password.length < 5) {
+    } else if (password.length <= 6) {
       this.setState({ errors: { ...noErrors, unvalidPwd: true } });
     } else {
       this.setState({ errors: noErrors, isLoading: true });
@@ -45,11 +45,13 @@ class Register extends React.Component {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password, name }),
       })
-        .then((res) => res.json())
-        .then((user) => {
+        .then(res => {
+          this.setState({ isLoading: false });
+          return res.json();
+        })
+        .then(user => {
           if (user.id) {
             setCurrentUser(user);
-            this.setState({ isLoading: false });
             history.push("/");
           } else {
             this.setState({ errors: { ...noErrors, existingEmail: true } });

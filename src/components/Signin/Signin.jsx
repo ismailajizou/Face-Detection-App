@@ -40,11 +40,13 @@ class Signin extends React.Component {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       })
-        .then((res) => res.json())
+        .then((res) =>{
+            this.setState({ isLoading: false });      
+            return res.json();
+        })
         .then((user) => {
           if (user.id) {
             setCurrentUser(user);
-            this.setState({ isLoading: false });
             history.push("/");
           } else {
             this.setState({ errors: { ...noErrors, noUser: true } });
