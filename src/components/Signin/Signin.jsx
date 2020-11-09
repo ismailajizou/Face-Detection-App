@@ -32,7 +32,7 @@ class Signin extends React.Component {
     const { history, setCurrentUser } = this.props;
     const { email, password } = this.state;
     if (!email.length || !password.length) {
-      this.setState({ errors: { ...noErrors, emptyField: true } });
+      return this.setState({ errors: { ...noErrors, emptyField: true } });
     } else {
       this.setState({ errors: noErrors, isLoading: true });
       fetch("https://vast-bastion-34313.herokuapp.com/signin", {

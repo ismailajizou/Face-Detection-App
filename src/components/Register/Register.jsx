@@ -35,9 +35,9 @@ class Register extends React.Component {
     const { history, setCurrentUser } = this.props;
     const { email, password, name } = this.state;
     if (!email.length || !password.length || !name.length) {
-      this.setState({ errors: { ...noErrors, emptyField: true } });
+      return this.setState({ errors: { ...noErrors, emptyField: true } });
     } else if (password.length <= 6) {
-      this.setState({ errors: { ...noErrors, unvalidPwd: true } });
+      return this.setState({ errors: { ...noErrors, unvalidPwd: true } });
     } else {
       this.setState({ errors: noErrors, isLoading: true });
       fetch("https://vast-bastion-34313.herokuapp.com/register", {
@@ -78,7 +78,7 @@ class Register extends React.Component {
                   <p className="red fw5">Email already exists</p>
                 ) : unvalidPwd ? (
                   <p className="red fw5">
-                    Unvalid password: must contain at least 5 characters
+                    Unvalid password: must contain at least 6 characters
                   </p>
                 ) : emptyField ? (
                   <p className="red fw5">Empty field</p>
