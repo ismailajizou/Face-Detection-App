@@ -17,10 +17,6 @@ const customStyles = {
   };
 
 class ModalPopup extends React.Component{
-
-  
-  
-
   render(){
     const {isModalOpen} = this.props;
     return ( 

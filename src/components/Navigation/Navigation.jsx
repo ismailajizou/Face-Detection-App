@@ -15,7 +15,7 @@ const Navigation = ({location, dispatch, hidden, currentUser}) => {
                             <img 
                             onClick={() => dispatch(toggleMenu())}
                             src={`data:image/(png|jpg);base64,${arrayBufferToBase64(currentUser.profileimage.data)}`}
-                            className="br-100 ba h3 w3 dib pointer profile" alt="avatar" />
+                            className="br-100 ba h3 w3 dib pointer" alt="avatar" />
                         </div>
                 </nav>
                 <DropdownMenu hidden={hidden} />

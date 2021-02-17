@@ -29,47 +29,49 @@ class ModalContent extends React.Component {
     const { dispatch, currentUser, src } = this.props;
     return (
       <>
-        <h2 className="modal-title tc">Profile</h2>
-        <div className="pa2 profile-username">
-          <input
-            onChange={this.HandleFileChange}
-            ref={(fileInput) => (this.fileInput = fileInput)}
-            type="file"
-            className="input-file"
-            style={{ display: "none" }}
-          />
-          <img
-            onClick={() => this.fileInput.click()}
-            src={
-              src
-                ? src
-                : `data:image/jpg;base64,${arrayBufferToBase64(
-                    currentUser.profileimage.data
-                  )}`
-            }
-            className="br-100 ba pointer profile-change"
-            alt=""
-          />
-          <h3 className="username">{currentUser.name}</h3>
+        <h2 className="modal-title">Profile</h2>
+
+        <div className="profile-cont">
+
+        <div className="profile-input">
+            <input
+              onChange={this.HandleFileChange}
+              ref={(fileInput) => (this.fileInput = fileInput)}
+              type="file"
+              style={{ display: "none" }}
+            />
+            <img src={src? src : `data:image/jpg;base64,${arrayBufferToBase64(currentUser.profileimage.data)}`}
+              className="profile-img"
+              alt=""
+            />
+          </div>
+
+          <div className="change-cont">
+            <button className="change" onClick={() => this.fileInput.click()}>Change</button>
+            <p className="requirements">JPG or PNG. Max size 250K</p>
+          </div>
+
         </div>
-        <div className="date-joined flex flex-column">
-          <span>You are member since: ...</span>
+
+          <div className="username-cont">
+            <p id="username-label">Username: </p>
+            <input className="username-input" value={currentUser.name} readOnly/>
+          </div>
+
+        <div className="date-joined">
+          <span>You are member since:</span>
+          <br/>
           <span>{new Date(currentUser.joined).toLocaleDateString()}</span>
         </div>
-        <div className="btns-container">
+
+        <div className="btns-cont">
           <button
             type="submit"
             onClick={this.onSubmitChangeProfile}
-            className="submit-profile"
-          >
-            Submit
-          </button>
+            className="save">Save</button>
           <button
-            className="cancel-modal"
-            onClick={() => dispatch(toggleModal(false))}
-          >
-            Cancel
-          </button>
+            className="cancel"
+            onClick={() => dispatch(toggleModal(false))}>Cancel</button>
         </div>
       </>
     );
