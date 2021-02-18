@@ -2,9 +2,9 @@ import React from "react";
 import axios from "axios";
 import { connect } from "react-redux";
 import { toggleModal } from "../../redux/modal/modal-actions";
-import arrayBufferToBase64 from "../../utils/utils";
 import { setProfile } from "../../redux/profile/profile-actions";
 import { setCurrentUser } from "../../redux/user/user-actions";
+import {apiURL} from '../../utils/utils'
 
 class ModalContent extends React.Component {
   HandleFileChange = (event) => {
@@ -15,14 +15,31 @@ class ModalContent extends React.Component {
 
   onSubmitChangeProfile = (e) => {
     const { image, dispatch, currentUser } = this.props;
-    const fd = new FormData();
-    fd.append("image", image, image.name);
-    axios
-      .post("https://vast-bastion-34313.herokuapp.com/changeProfilePic", fd)
-      .then((res) =>
-        dispatch(setCurrentUser({ ...currentUser, profileimage: res.data[0] }))
-      )
-      .catch((err) => console.log(err));
+    const reader = new FileReader() ;
+    reader.readAsDataURL(image);
+    reader.onload = (event) => {
+      const imageElement = document.createElement("img");
+      imageElement.src = event.target.result;
+      imageElement.onload = (e) => {
+        const canvas = document.createElement("canvas");
+        const MAX_WIDTH = 200;
+        const scalSize = MAX_WIDTH / e.target.width;
+        canvas.width = MAX_WIDTH;
+        canvas.height = e.target.height * scalSize;
+
+        const context = canvas.getContext("2d");
+        context.drawImage(e.target, 0, 0, canvas.width, canvas.height);
+        canvas.toBlob((blob)=> {
+          const form  = new FormData();
+          form.append('image', blob, image.name)
+          axios.post(`${apiURL}/changeProfilePic`, form)
+          .then((res) =>{
+            dispatch(setCurrentUser({ ...currentUser, profileimage: res.data[0] }))
+          })
+          .catch((err) => console.log(err));
+        })
+      }
+    }
   };
 
   render() {
@@ -38,9 +55,11 @@ class ModalContent extends React.Component {
               onChange={this.HandleFileChange}
               ref={(fileInput) => (this.fileInput = fileInput)}
               type="file"
+              accept=".jpg, .jpeg, .png"
               style={{ display: "none" }}
             />
-            <img src={src? src : `data:image/jpg;base64,${arrayBufferToBase64(currentUser.profileimage.data)}`}
+            <img 
+            src={src ? src : currentUser.profileimage}
               className="profile-img"
               alt=""
             />
@@ -48,7 +67,7 @@ class ModalContent extends React.Component {
 
           <div className="change-cont">
             <button className="change" onClick={() => this.fileInput.click()}>Change</button>
-            <p className="requirements">JPG or PNG. Max size 250K</p>
+            <p className="requirements">JPG or PNG. Max size 100K</p>
           </div>
 
         </div>

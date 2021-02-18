@@ -1,3 +1,5 @@
+export const apiURL = "https://vast-bastion-34313.herokuapp.com";
+
 const arrayBufferToBase64 = ( buffer ) => {
     let binary = '';
     let bytes = new Uint8Array( buffer );
@@ -7,5 +9,4 @@ const arrayBufferToBase64 = ( buffer ) => {
     }
     return btoa(binary);
   }
-
-  export default arrayBufferToBase64;
+export default arrayBufferToBase64;

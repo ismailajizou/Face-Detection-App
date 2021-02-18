@@ -2,6 +2,8 @@ import React from "react";
 import { connect } from "react-redux";
 import { setCurrentUser } from "../../redux/user/user-actions";
 import Spinner from "../Spinner/Spinner";
+import {apiURL} from "../../utils/utils"
+import axios from "axios";
 
 const noErrors = {
   unvalidPwd: false,
@@ -40,18 +42,15 @@ class Register extends React.Component {
       return this.setState({ errors: { ...noErrors, unvalidPwd: true } });
     } else {
       this.setState({ errors: noErrors, isLoading: true });
-      fetch("https://vast-bastion-34313.herokuapp.com/register", {
+      axios({
         method: "post",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, name }),
+        url: `${apiURL}/register`, 
+        data: { email, password, name },
       })
         .then(res => {
           this.setState({ isLoading: false });
-          return res.json();
-        })
-        .then(user => {
-          if (user.id) {
-            setCurrentUser(user);
+          if (res.data.id) {
+            setCurrentUser(res.data);
             history.push("/");
           } else {
             this.setState({ errors: { ...noErrors, existingEmail: true } });

@@ -8,6 +8,8 @@ import { setCurrentUser } from '../../redux/user/user-actions';
 import ModalPopup from '../Modal/Modal';
 import { createStructuredSelector } from 'reselect';
 import { selectCurrentUser } from '../../redux/user/user-selectors';
+import {apiURL} from '../../utils/utils'
+import axios from "axios";
 
 
 class HomePage extends React.Component {
@@ -40,25 +42,23 @@ class HomePage extends React.Component {
       const { currentUser } = this.props;
       const { input }= this.state;
       this.setState({imageUrl: input});
-      fetch('https://vast-bastion-34313.herokuapp.com/imageurl', {
-              method: 'post',
-              headers: {'Content-Type': 'application/json'},
-              body: JSON.stringify({ input })
+        axios({
+              method: "post",
+              url: `${apiURL}/imageurl`, 
+              data: { input },
       })
-        .then(response => response.json())
         .then(response => {
-          if(response) {
-            fetch('https://vast-bastion-34313.herokuapp.com/image', {
+          if(response.data) {
+            axios({
               method: 'put',
-              headers: {'Content-Type': 'application/json'},
-              body: JSON.stringify({ id: currentUser.id })
-          })
-          .then(res => res.json())
-          .then(count => {
-            this.setState(Object.assign(currentUser, { entries: count}))
+              url: `${apiURL}/image`, 
+              data: { id: currentUser.id }
+            })
+          .then(res => {
+            this.setState(Object.assign(currentUser, { entries: res.data}))
           })
       }
-      this.displayFaceBox(this.calculateFaceLocation(response))
+      this.displayFaceBox(this.calculateFaceLocation(response.data))
     })
     .catch(err => console.log(err))
     }

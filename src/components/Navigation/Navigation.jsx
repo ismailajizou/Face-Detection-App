@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter, Link} from 'react-router-dom';
 import { toggleMenu } from '../../redux/menu/menu-actions';
 import DropdownMenu from '../DropdownMenu/DropdownMenu';
-import arrayBufferToBase64 from '../../utils/utils';
+//import arrayBufferToBase64 from '../../utils/utils';
 
 const Navigation = ({location, dispatch, hidden, currentUser}) => {
     if (location.pathname === '/' && currentUser) {
@@ -13,8 +13,10 @@ const Navigation = ({location, dispatch, hidden, currentUser}) => {
                         <div
                         className="pa2 tc">
                             <img 
+                            style={{objectFit: 'cover'}}
                             onClick={() => dispatch(toggleMenu())}
-                            src={`data:image/(png|jpg);base64,${arrayBufferToBase64(currentUser.profileimage.data)}`}
+                            //src={`data:image/(png|jpg);base64,${arrayBufferToBase64(currentUser.profileimage.data)}`}
+                            src={currentUser.profileimage}
                             className="br-100 ba h3 w3 dib pointer" alt="avatar" />
                         </div>
                 </nav>
