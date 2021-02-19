@@ -50,6 +50,7 @@ class Register extends React.Component {
         .then(res => {
           this.setState({ isLoading: false });
           if (res.data.id) {
+            localStorage.setItem("user", JSON.stringify(res.data));
             setCurrentUser(res.data);
             history.push("/");
           } else {

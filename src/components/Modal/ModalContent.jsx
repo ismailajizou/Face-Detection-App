@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { toggleModal } from "../../redux/modal/modal-actions";
 import { setProfile } from "../../redux/profile/profile-actions";
 import { setCurrentUser } from "../../redux/user/user-actions";
-import {apiURL} from '../../utils/utils'
+import {apiURL, ImgSrc} from '../../utils/utils'
 
 class ModalContent extends React.Component {
   HandleFileChange = (event) => {
@@ -33,8 +33,9 @@ class ModalContent extends React.Component {
           const form  = new FormData();
           form.append('image', blob, image.name)
           axios.post(`${apiURL}/changeProfilePic`, form)
-          .then((res) =>{
-            dispatch(setCurrentUser({ ...currentUser, profileimage: res.data[0] }))
+          .then(({data}) =>{
+            localStorage.setItem("user", JSON.stringify({ ...currentUser, profileimage: data[0] }))
+            dispatch(setCurrentUser({ ...currentUser, profileimage: data[0] }))
           })
           .catch((err) => console.log(err));
         })
@@ -59,7 +60,7 @@ class ModalContent extends React.Component {
               style={{ display: "none" }}
             />
             <img 
-            src={src ? src : currentUser.profileimage}
+            src={src ? src : ImgSrc(currentUser)}
               className="profile-img"
               alt=""
             />

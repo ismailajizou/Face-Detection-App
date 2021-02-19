@@ -31,6 +31,7 @@ const DropdownMenu = ({ hidden, dispatch }) => {
         className="pa2"
       >
         <Link
+          onClick={() => {localStorage.clear()}}
           to="/signin"
           style={{ outline: "none" }}
           className="f4 link dim black pa3 pointer"

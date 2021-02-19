@@ -19,6 +19,7 @@ const particlesParams = {
 };
 
 const App = ({ currentUser }) => {
+
   return (
     <div className="App">
       <Particles className="particles" params={particlesParams} />
@@ -41,5 +42,4 @@ const App = ({ currentUser }) => {
 const mapStateToProps = createStructuredSelector({
   currentUser: selectCurrentUser,
 });
-
 export default connect(mapStateToProps)(App);

@@ -1,6 +1,5 @@
-import arrayBufferToBase64 from '../../utils/utils'
 const INITIAL_STATE = {
-    currentUser: null,
+    currentUser: JSON.parse(localStorage.getItem("user"))
 }
 
 const userReducer = (state = INITIAL_STATE , action) => {
@@ -8,11 +7,7 @@ const userReducer = (state = INITIAL_STATE , action) => {
         case 'SET_CURRENT_USER':
             return {
                 ...state,
-                //currentUser: action.payload
-                currentUser: action.payload ? {
-                    ...action.payload,
-                    profileimage : `data:image/(png|jpg);base64,${arrayBufferToBase64(action.payload.profileimage.data)}`
-                } : action.payload
+                currentUser: action.payload
             };
         default : 
             return state;
