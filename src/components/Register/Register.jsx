@@ -1,15 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
 import { setCurrentUser } from "../../redux/user/user-actions";
-import Spinner from "../Spinner/Spinner";
+import MainSpinner from "../Spinners/MainSpinner";
 import {apiURL} from "../../utils/utils"
 import axios from "axios";
-
-const noErrors = {
-  unvalidPwd: false,
-  existingEmail: false,
-  emptyField: false,
-};
 
 class Register extends React.Component {
   constructor() {
@@ -19,11 +13,7 @@ class Register extends React.Component {
       password: "",
       name: "",
       isLoading: false,
-      errors: {
-        unvalidPwd: false,
-        existingEmail: false,
-        emptyField: false,
-      },
+      errorMessage: ""
     };
   }
 
@@ -37,33 +27,33 @@ class Register extends React.Component {
     const { history, setCurrentUser } = this.props;
     const { email, password, name } = this.state;
     if (!email.length || !password.length || !name.length) {
-      return this.setState({ errors: { ...noErrors, emptyField: true } });
+      return this.setState({ errorMessage: "Empty fields !!" });
     } else if (password.length <= 6) {
-      return this.setState({ errors: { ...noErrors, unvalidPwd: true } });
+      return this.setState({ errorMessage: "Unvalid password: must contain at least 6 characters" });
     } else {
-      this.setState({ errors: noErrors, isLoading: true });
+      this.setState({ isLoading: true });
       axios({
         method: "post",
         url: `${apiURL}/register`, 
         data: { email, password, name },
       })
         .then(res => {
-          this.setState({ isLoading: false });
           if (res.data.id) {
             localStorage.setItem("user", JSON.stringify(res.data));
             setCurrentUser(res.data);
+            this.setState({ isLoading: false });
             history.push("/");
-          } else {
-            this.setState({ errors: { ...noErrors, existingEmail: true } });
           }
-        });
+        }).catch(err => {
+          this.setState({ isLoading: false, errorMessage: err.response.data });
+        })
     }
   };
 
   render() {
-    const { existingEmail, unvalidPwd, emptyField } = this.state.errors;
-    if (this.state.isLoading) {
-      return <Spinner />;
+    const { errorMessage, isLoading } = this.state;
+    if (isLoading) {
+      return <MainSpinner />;
     } else {
       return (
         <form
@@ -74,15 +64,7 @@ class Register extends React.Component {
             <div className="measure">
               <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
                 <legend className="f1 fw6 ph0 mh0">Register</legend>
-                {existingEmail ? (
-                  <p className="red fw5">Email already exists</p>
-                ) : unvalidPwd ? (
-                  <p className="red fw5">
-                    Unvalid password: must contain at least 6 characters
-                  </p>
-                ) : emptyField ? (
-                  <p className="red fw5">Empty field</p>
-                ) : null}
+                {errorMessage ? <p className="red fw5">{errorMessage}</p> : null}
                 <div className="mt3">
                   <label className="db fw6 lh-copy f6" htmlFor="name">
                     Name

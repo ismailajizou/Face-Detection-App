@@ -60,7 +60,7 @@ class HomePage extends React.Component {
       }
       this.displayFaceBox(this.calculateFaceLocation(response.data))
     })
-    .catch(err => console.log(err))
+    .catch(err => err.response.data ? alert(err.response.data) : console.log(err));
     }
     
     onInputChange = (event) => {

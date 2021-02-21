@@ -14,10 +14,11 @@
 }
 
  .profile-cont{
-     display: grid;
+    display: grid;
     padding: 20px;
     display: flex;
     place-items: center;
+
  }
 .profile-img{
     border: 1px solid black;
@@ -27,6 +28,10 @@
     height: 100px;
     object-fit: cover;
     cursor: pointer;
+    overflow: hidden;
+}
+img.loading {
+    opacity: 0.6;
 }
 .profile-input{
     display: flex;
@@ -103,4 +108,7 @@ button:focus{
 .cancel:hover{
     background-color: red;
     color: white;
+}
+button.not-allowed{
+    cursor: not-allowed;
 }

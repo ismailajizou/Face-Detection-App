@@ -1,7 +1,7 @@
 import React, { lazy, Suspense } from "react";
 import "./App.css";
 import Navigation from "./components/Navigation/Navigation";
-import Spinner from "./components/Spinner/Spinner";
+import MainSpinner from "./components/Spinners/MainSpinner";
 import Particles from "react-particles-js";
 import { Redirect, Route, Switch } from "react-router-dom";
 import { connect } from "react-redux";
@@ -25,7 +25,7 @@ const App = ({ currentUser }) => {
       <Particles className="particles" params={particlesParams} />
       <Navigation />
       <Switch>
-        <Suspense fallback={<Spinner />}>
+        <Suspense fallback={<MainSpinner />}>
           <Route exact path="/signin" component={Signin} />
           <Route exact path="/register" component={Register} />
           {currentUser ? (

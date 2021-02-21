@@ -1,6 +1,7 @@
 const INITIAL_STATE = {
     image: '',
-    src: ''
+    src: '',
+    isProfileLoading: false
 }
 
 const profileReducer = (state=INITIAL_STATE , action) => {
@@ -9,7 +10,8 @@ const profileReducer = (state=INITIAL_STATE , action) => {
             return {
                 ...state,
                 image: action.payload.image,
-                src: action.payload.src
+                src: action.payload.src,
+                isProfileLoading: action.payload.isProfileLoading
             }
         default:
             return state;

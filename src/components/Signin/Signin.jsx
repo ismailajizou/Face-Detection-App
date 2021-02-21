@@ -2,14 +2,10 @@ import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { setCurrentUser } from "../../redux/user/user-actions";
-import Spinner from "../Spinner/Spinner";
+import MainSpinner from "../Spinners/MainSpinner";
 import {apiURL} from '../../utils/utils'
 import axios from "axios";
 
-const noErrors = {
-  emptyField: false,
-  noUser: false,
-};
 class Signin extends React.Component {
   constructor() {
     super();
@@ -17,10 +13,7 @@ class Signin extends React.Component {
       email: "",
       password: "",
       isLoading: false,
-      errors: {
-        emptyField: false,
-        noUser: false,
-      },
+      errorMessage: ""
     };
   }
 
@@ -34,31 +27,29 @@ class Signin extends React.Component {
     const { history, setCurrentUser } = this.props;
     const { email, password } = this.state;
     if (!email.length || !password.length) {
-      return this.setState({ errors: { ...noErrors, emptyField: true } });
+      return this.setState({errorMessage: "Empty field !!"});
     } else {
-      this.setState({ errors: noErrors, isLoading: true });
+      this.setState({ isLoading: true });
       axios({
         method: "post",
         url: `${apiURL}/signin`, 
         data: { email, password },
       })
         .then((res) => {
-          this.setState({ isLoading: false });  
           if (res.data.id) {
             localStorage.setItem("user", JSON.stringify(res.data));
             setCurrentUser(res.data);
+            this.setState({ isLoading: false });  
             history.push("/");
-          } else {
-            this.setState({ errors: { ...noErrors, noUser: true } });
           }
-        });
+        }).catch(err => this.setState({isLoading: false,errorMessage: err.response.data}))
     }
   };
 
   render() {
-    const { emptyField, noUser } = this.state.errors;
-    if (this.state.isLoading) {
-      return <Spinner />;
+    const { errorMessage, isLoading } = this.state;
+    if (isLoading) {
+      return <MainSpinner />;
     } else {
       return (
         <form
@@ -69,11 +60,7 @@ class Signin extends React.Component {
             <div className="measure">
               <fieldset className="ba b--transparent ph0 mh0">
                 <legend className="f1 fw6 ph0 mh0">Sign In</legend>
-                {emptyField ? (
-                  <p className="red fw5">Empty field</p>
-                ) : noUser ? (
-                  <p className="red fw5">No such user</p>
-                ) : null}
+                {errorMessage ? <p className="red fw5">{errorMessage}</p> : null}
                 <div className="mt3">
                   <label className="db fw6 lh-copy f6">Email</label>
                   <input
