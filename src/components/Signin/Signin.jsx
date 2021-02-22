@@ -30,11 +30,7 @@ class Signin extends React.Component {
       return this.setState({errorMessage: "Empty field !!"});
     } else {
       this.setState({ isLoading: true });
-      axios({
-        method: "post",
-        url: `${apiURL}/signin`, 
-        data: { email, password },
-      })
+      axios.post(`${apiURL}/signin`, { email, password })
         .then((res) => {
           if (res.data.id) {
             localStorage.setItem("user", JSON.stringify(res.data));

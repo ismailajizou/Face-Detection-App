@@ -32,11 +32,7 @@ class Register extends React.Component {
       return this.setState({ errorMessage: "Unvalid password: must contain at least 6 characters" });
     } else {
       this.setState({ isLoading: true });
-      axios({
-        method: "post",
-        url: `${apiURL}/register`, 
-        data: { email, password, name },
-      })
+      axios.post(`${apiURL}/register`, { email, password, name })
         .then(res => {
           if (res.data.id) {
             localStorage.setItem("user", JSON.stringify(res.data));

@@ -8,7 +8,7 @@ import { setCurrentUser } from '../../redux/user/user-actions';
 import ModalPopup from '../Modal/Modal';
 import { createStructuredSelector } from 'reselect';
 import { selectCurrentUser } from '../../redux/user/user-selectors';
-import {apiURL} from '../../utils/utils'
+import {apiURL, calculateFaceLocation} from '../../utils/utils'
 import axios from "axios";
 
 
@@ -16,23 +16,12 @@ class HomePage extends React.Component {
     constructor() {
         super();
         this.state = {
+            prevInput: '',
             input: '',
             imageUrl: '',
             box: {},
         }
     }
-    calculateFaceLocation = (data) => {
-        const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
-        const image = document.getElementById('inputimg');
-        const width = Number(image.width);
-        const height = Number(image.height);
-        return {
-          leftCol : clarifaiFace.left_col * width,
-          topRow : clarifaiFace.top_row * height,
-          rightCol : width - (clarifaiFace.right_col *width),
-          bottomRow : height - (clarifaiFace.bottom_row * height)
-        }
-      }
     
       displayFaceBox = (box) => {
         this.setState({box: box});
@@ -40,27 +29,24 @@ class HomePage extends React.Component {
     
     onBtnSubmit = () => {
       const { currentUser } = this.props;
-      const { input }= this.state;
+      const { input, prevInput }= this.state;
       this.setState({imageUrl: input});
-        axios({
-              method: "post",
-              url: `${apiURL}/imageurl`, 
-              data: { input },
-      })
-        .then(response => {
-          if(response.data) {
-            axios({
-              method: 'put',
-              url: `${apiURL}/image`, 
-              data: { id: currentUser.id }
+      if(input !== prevInput){
+        this.setState({prevInput: input});
+        axios
+        .post(`${apiURL}/imageurl`, { input })
+          .then(response => {
+            if(response.data) {
+              axios
+              .put(`${apiURL}/image`, { id: currentUser.id })
+            .then(res => {
+              this.setState(Object.assign(currentUser, { entries: res.data}));
             })
-          .then(res => {
-            this.setState(Object.assign(currentUser, { entries: res.data}))
-          })
+        }
+        this.displayFaceBox(calculateFaceLocation(response.data));
+      })
+      .catch(err => err.response.data ? alert(err.response.data) : console.log(err));
       }
-      this.displayFaceBox(this.calculateFaceLocation(response.data))
-    })
-    .catch(err => err.response.data ? alert(err.response.data) : console.log(err));
     }
     
     onInputChange = (event) => {
@@ -85,9 +71,7 @@ class HomePage extends React.Component {
     }
 }
 
-const mapStateToProps = createStructuredSelector({
-  currentUser: selectCurrentUser
-})
+const mapStateToProps = createStructuredSelector({ currentUser: selectCurrentUser });
 
 const mapDispatchToProps = dispatch => ({
   setCurrentUser: user => dispatch(setCurrentUser(user))

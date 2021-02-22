@@ -18,35 +18,37 @@ class ModalContent extends React.Component {
 
   onSubmitChangeProfile = (e) => {
     const { profile, dispatch, currentUser } = this.props;
-    this.props.dispatch(setProfile({...profile,isProfileLoading: true}));
-    const reader = new FileReader() ;
-    reader.readAsDataURL(profile.image);
-    reader.onload = (event) => {
-      const imageElement = document.createElement("img");
-      imageElement.src = event.target.result;
-      imageElement.onload = (e) => {
-        const canvas = document.createElement("canvas");
-        const MAX_WIDTH = 100;
-        const scalSize = MAX_WIDTH / e.target.width;
-        canvas.width = MAX_WIDTH;
-        canvas.height = e.target.height * scalSize;
-
-        const context = canvas.getContext("2d");
-        context.drawImage(e.target, 0, 0, canvas.width, canvas.height);
-        canvas.toBlob((blob)=> {
-          const form  = new FormData();
-          form.append('image', blob, profile.image.name)
-          axios.post(`${apiURL}/changeProfilePic`, form)
-          .then(({data}) =>{
-            this.props.dispatch(setProfile({...profile,isProfileLoading: false}));
-            localStorage.setItem("user", JSON.stringify({ ...currentUser, profileimage: data[0] }))
-            dispatch(setCurrentUser({ ...currentUser, profileimage: data[0] }))
+    if(profile.image){
+      this.props.dispatch(setProfile({...profile,isProfileLoading: true}));
+      const reader = new FileReader() ;
+      reader.readAsDataURL(profile.image);
+      reader.onload = (event) => {
+        const imageElement = document.createElement("img");
+        imageElement.src = event.target.result;
+        imageElement.onload = (e) => {
+          const canvas = document.createElement("canvas");
+          const MAX_WIDTH = 100;
+          const scalSize = MAX_WIDTH / e.target.width;
+          canvas.width = MAX_WIDTH;
+          canvas.height = e.target.height * scalSize;
+  
+          const context = canvas.getContext("2d");
+          context.drawImage(e.target, 0, 0, canvas.width, canvas.height);
+          canvas.toBlob((blob)=> {
+            const form  = new FormData();
+            form.append('image', blob, profile.image.name)
+            axios.post(`${apiURL}/changeProfilePic`, form)
+            .then(({data}) =>{
+              this.props.dispatch(setProfile({src: "", image: "",isProfileLoading: false}));
+              localStorage.setItem("user", JSON.stringify({ ...currentUser, profileimage: data[0] }));
+              dispatch(setCurrentUser({ ...currentUser, profileimage: data[0] }));
+            })
+            .catch((err) => {
+              this.props.dispatch(setProfile({src: "", image: "", isProfileLoading: false}));
+              err.response.data ? alert(err.response.data) : console.log(err);
+            });
           })
-          .catch((err) => {
-            this.props.dispatch(setProfile({...profile, isProfileLoading: false}));
-            err.response.data ? alert(err.response.data) : console.log(err);
-          });
-        })
+        }
       }
     }
   };
