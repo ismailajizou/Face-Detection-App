@@ -27,25 +27,22 @@ class HomePage extends React.Component {
         this.setState({box: box});
       }
     
-    onBtnSubmit = () => {
+    onBtnSubmit = async () => {
       const { currentUser } = this.props;
       const { input, prevInput }= this.state;
       this.setState({imageUrl: input});
-      if(input !== prevInput){
+      if (input !== prevInput) {
         this.setState({prevInput: input});
-        axios
-        .post(`${apiURL}/imageurl`, { input })
-          .then(response => {
-            if(response.data) {
-              axios
-              .put(`${apiURL}/image`, { id: currentUser.id })
-            .then(res => {
-              this.setState(Object.assign(currentUser, { entries: res.data}));
-            })
+        try {
+          const response = await axios.post(`${apiURL}/imageurl`, {input});
+          if (response.data) {
+            const res = await axios.put(`${apiURL}/image`, {id: currentUser.id});
+            this.setState(Object.assign(currentUser, {entries: res.data}));
+          }
+          this.displayFaceBox(calculateFaceLocation(response.data));
+        } catch(err){
+          err.response.data ? alert(err.response.data) : console.log(err)
         }
-        this.displayFaceBox(calculateFaceLocation(response.data));
-      })
-      .catch(err => err.response.data ? alert(err.response.data) : console.log(err));
       }
     }
     

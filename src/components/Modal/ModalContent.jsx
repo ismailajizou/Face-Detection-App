@@ -4,8 +4,9 @@ import { connect } from "react-redux";
 import { toggleModal } from "../../redux/modal/modal-actions";
 import { setProfile } from "../../redux/profile/profile-actions";
 import { setCurrentUser } from "../../redux/user/user-actions";
-import {apiURL, ImgSrc} from '../../utils/utils'
+import {apiURL, ImgSrc} from '../../utils/utils';
 import LittleSpinner from '../Spinners/LittleSpinner';
+import Compressor from 'compressorjs'
 
 class ModalContent extends React.Component {
 
@@ -16,42 +17,27 @@ class ModalContent extends React.Component {
     dispatch(setProfile({ ...profile,image: pic, src}));
   };
 
-  onSubmitChangeProfile = (e) => {
+  onSubmitChangeProfile =  async () =>{
     const { profile, dispatch, currentUser } = this.props;
     if(profile.image){
       this.props.dispatch(setProfile({...profile,isProfileLoading: true}));
-      const reader = new FileReader() ;
-      reader.readAsDataURL(profile.image);
-      reader.onload = (event) => {
-        const imageElement = document.createElement("img");
-        imageElement.src = event.target.result;
-        imageElement.onload = (e) => {
-          const canvas = document.createElement("canvas");
-          const MAX_WIDTH = 100;
-          const scalSize = MAX_WIDTH / e.target.width;
-          canvas.width = MAX_WIDTH;
-          canvas.height = e.target.height * scalSize;
-  
-          const context = canvas.getContext("2d");
-          context.drawImage(e.target, 0, 0, canvas.width, canvas.height);
-          canvas.toBlob((blob)=> {
-            const form  = new FormData();
-            form.append('image', blob, profile.image.name)
-            axios.post(`${apiURL}/changeProfilePic`, form)
-            .then(({data}) =>{
-              this.props.dispatch(setProfile({src: "", image: "",isProfileLoading: false}));
-              localStorage.setItem("user", JSON.stringify({ ...currentUser, profileimage: data[0] }));
-              dispatch(setCurrentUser({ ...currentUser, profileimage: data[0] }));
-            })
-            .catch((err) => {
-              this.props.dispatch(setProfile({src: "", image: "", isProfileLoading: false}));
-              err.response.data ? alert(err.response.data) : console.log(err);
-            });
-          })
+      new Compressor(profile.image, {
+        async success (result){
+          const form = new FormData();
+          form.append('image', result, profile.image.name);
+          try{
+            const {data} = await axios.post(`${apiURL}/changeProfilePic`, form);
+            dispatch(setProfile({src: "", image: "",isProfileLoading: false}));
+            localStorage.setItem("user", JSON.stringify({ ...currentUser, profileimage: data[0] }));
+            dispatch(setCurrentUser({ ...currentUser, profileimage: data[0] }));
+          } catch(err){
+            dispatch(setProfile({src: "", image: "", isProfileLoading: false}));
+            err.response.data ? alert(err.response.data) : console.log(err);
+          }
         }
-      }
+      })
     }
-  };
+  }
 
   render() {
     const { dispatch, currentUser, profile:{src, isProfileLoading} } = this.props;

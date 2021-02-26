@@ -22,7 +22,7 @@ class Signin extends React.Component {
     this.setState({ [name]: value });
   };
 
-  onSubmitSignIn = (event) => {
+  onSubmitSignIn = async event => {
     event.preventDefault();
     const { history, setCurrentUser } = this.props;
     const { email, password } = this.state;
@@ -30,15 +30,17 @@ class Signin extends React.Component {
       return this.setState({errorMessage: "Empty field !!"});
     } else {
       this.setState({ isLoading: true });
-      axios.post(`${apiURL}/signin`, { email, password })
-        .then((res) => {
-          if (res.data.id) {
-            localStorage.setItem("user", JSON.stringify(res.data));
-            setCurrentUser(res.data);
-            this.setState({ isLoading: false });  
-            history.push("/");
-          }
-        }).catch(err => this.setState({isLoading: false,errorMessage: err.response.data}))
+      try {
+        const res = await axios.post(`${apiURL}/signin`, { email, password });
+        if (res.data.id) {
+          localStorage.setItem("user", JSON.stringify(res.data));
+          setCurrentUser(res.data);
+          this.setState({ isLoading: false });  
+          history.push("/");
+        }
+      } catch(err){
+        this.setState({isLoading: false,errorMessage: err.response.data});
+      }
     }
   };
 

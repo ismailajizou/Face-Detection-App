@@ -1,5 +1,6 @@
 export const apiURL = "https://vast-bastion-34313.herokuapp.com";
 
+
 export const calculateFaceLocation = (data) => {
   const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
   const image = document.getElementById('inputimg');
@@ -13,16 +14,13 @@ export const calculateFaceLocation = (data) => {
   }
 }
 
-
 export const ImgSrc = (user) => {
   return `data:image/(png|jpg);base64,${arrayBufferToBase64(user.profileimage.data)}`
 }
+
 export const arrayBufferToBase64 = ( buffer ) => {
-    let binary = '';
     let bytes = new Uint8Array( buffer );
-    let len = bytes.byteLength;
-    for (let i = 0; i < len; i++) {
-       binary += String.fromCharCode( bytes[ i ] );
-    }
-    return btoa(binary);
-  }
+    return btoa(
+      bytes.reduce((data, byte) => data + String.fromCharCode(byte), '')
+   );
+}
