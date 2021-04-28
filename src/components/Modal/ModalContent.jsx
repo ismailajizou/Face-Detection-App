@@ -26,7 +26,7 @@ class ModalContent extends React.Component {
           const form = new FormData();
           form.append('image', result, profile.image.name);
           try{
-            const {data} = await axios.post(`${apiURL}/changeProfilePic`, form);
+            const {data} = await axios.post(`${apiURL}/changeProfilePic/${currentUser.id}`, form);
             dispatch(setProfile({src: "", image: "",isProfileLoading: false}));
             localStorage.setItem("user", JSON.stringify({ ...currentUser, profileimage: data[0] }));
             dispatch(setCurrentUser({ ...currentUser, profileimage: data[0] }));
