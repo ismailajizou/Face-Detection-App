@@ -1,48 +1,47 @@
-import React from "react";
+import { MenuList, MenuItem, MenuDivider, useDisclosure } from "@chakra-ui/react";
 import { connect } from "react-redux";
-import { withRouter, Link } from "react-router-dom";
-import { toggleMenu } from "../../redux/menu/menu-actions";
-import { toggleModal } from "../../redux/modal/modal-actions";
-import { setProfile } from "../../redux/profile/profile-actions";
+import { withRouter } from "react-router-dom";
 import { setCurrentUser } from "../../redux/user/user-actions";
+import AccountModal from '../AccountModal/AccountModal';
+import ProfileModal from "../ProfileEditor/ProfileModal";
 
-const DropdownMenu = ({ hidden, dispatch }) => {
+
+const DropdownMenu = ({ dispatch, history }) => {
+  const { 
+    isOpen: isAccountModalOpen, 
+    onOpen: onAccountModalOpen, 
+    onClose: onAccountModalClose
+  } = useDisclosure();
+
+  const { 
+    isOpen: isProfileModalOpen, 
+    onOpen: onProfileModalOpen, 
+    onClose: onProfileModalClose
+  } = useDisclosure();
+
+  const logout = () => {
+    dispatch(setCurrentUser(null));
+    history.push('/signin');
+  }
   return (
-    <div
-      style={
-        hidden
-          ? { display: "none" }
-          : { backgroundColor: "rgba(255, 255, 255, 0.5)" }
-      }
-      className="list ba b--transparent shadow-5 br1 flex flex-column absolute right-2"
-    >
-      <span
-        onClick={() => dispatch(toggleModal(true))}
-        className="pa2 bb f4 link dim black pointer"
-      >
-        Profile
-      </span>
-      <span
-        onClick={() => {
-          dispatch(setCurrentUser(null));
-          dispatch(setProfile({ image: "", src: "" }));
-          dispatch(toggleMenu());
-        }}
-        className="pa2"
-      >
-        <Link
-          onClick={() => {localStorage.clear()}}
-          to="/signin"
-          style={{ outline: "none" }}
-          className="f4 link dim black pa3 pointer"
-        >
+      <MenuList bgColor='rgba(255, 255, 255, 0.5)' minW="auto" ml='-6rem'>
+        <MenuItem fontSize="lg" onClick={onAccountModalOpen} py={0}>
+          My Account
+        </MenuItem>
+        
+        <MenuDivider />
+        <MenuItem fontSize="lg" onClick={onProfileModalOpen} py={0}>
+          Profile
+        </MenuItem>
+        <MenuDivider />
+        <MenuItem fontSize="lg" onClick={logout} py={0}>
           Sign Out
-        </Link>
-      </span>
-    </div>
+        </MenuItem>
+        <AccountModal isOpen={isAccountModalOpen} onClose={onAccountModalClose} />
+        <ProfileModal isOpen={isProfileModalOpen} onClose={onProfileModalClose} />
+      </MenuList>
   );
 };
 
-const mapStateToProps = ({ menu: { hidden } }) => ({ hidden });
 
-export default withRouter(connect(mapStateToProps)(DropdownMenu));
+export default withRouter(connect()(DropdownMenu));

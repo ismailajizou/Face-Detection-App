@@ -1,16 +1,23 @@
-import React from 'react';
+import { Box, Image } from '@chakra-ui/react';
 import Tilt from 'react-tilt';
-import './Logo.css';
 import brain from './brain.png';
 
 const Logo = () => {
     
     return (
-        <div className='ma4 mt0'>
-            <Tilt className="Tilt br2 shadow-2" options={{ max : 55 }} style={{ height: 150, width: 150 }} >
-                <div className="Tilt-inner pa3"><img style={{paddingTop: '5px'}} src={brain} alt='logo'></img> </div>
+        <Box m="1rem 2rem" maxW="fit-content">
+            <Tilt style={{
+                background: 'linear-gradient(89deg, #FF5EDF 0%, #04C8DE 100%)',
+                height: 130, 
+                width: 130,
+                border: '1px solid white',
+                borderRadius: '0.6rem'
+                }}>
+                <Box display='flex' alignItems='center' justifyContent='center' h="100%">
+                    <Image src={brain} />
+                </Box>
             </Tilt>
-        </div>
+        </Box>
     );
 }
 export default Logo;

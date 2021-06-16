@@ -1,20 +1,18 @@
 .spinner-overlay {
     display: flex;
     position: absolute;
-    height: 100px;
-    width: 100px;
-    top: 50%;
-    left: 50%;
-    margin-left: -50px;
-    margin-top: -50px;
+    align-items: center;
+    justify-content: center;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
   }
   .spinner-container {
-    content: " ";
-    display: block;
     border-radius: 50%;
-    width: 0;
-    height: 0;
-    margin: 8px;
     box-sizing: border-box;
     border: 32px solid rgba(238, 255, 0, 0.808);
     border-color: rgb(251, 255, 0) transparent rgb(251, 255, 0) transparent;

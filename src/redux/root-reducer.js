@@ -1,17 +1,19 @@
 import { combineReducers } from "redux";
-import menuReducer from "./menu/menu-reducer";
-import modalReducer from "./modal/modal-reducer";
-import profileReducer from "./profile/profile-reducer";
 import userReducer from "./user/user-reducer";
+import {persistReducer} from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
+
+const persistConfig = {
+    key: 'root',
+    storage,
+    whitelist : ['user']
+}
 
 const rootReducer = combineReducers({
     user: userReducer,
-    menu: menuReducer,
-    modal: modalReducer,
-    profile: profileReducer
 });
 
-export default rootReducer;
+export default persistReducer(persistConfig, rootReducer);
 
 
 

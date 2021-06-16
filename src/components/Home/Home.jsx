@@ -1,31 +1,27 @@
-import React from 'react';
+import {Component} from 'react';
 import Logo from '../Logo/Logo';
 import ImageLinkForm from '../ImageLinkForm/ImageLinkForm';
 import Rank from '../Rank/Rank';
 import FaceRecognition from '../FaceRecognition/FaceRecognition';
 import { connect } from 'react-redux';
 import { setCurrentUser } from '../../redux/user/user-actions';
-import ModalPopup from '../Modal/Modal';
 import { createStructuredSelector } from 'reselect';
 import { selectCurrentUser } from '../../redux/user/user-selectors';
 import {apiURL, calculateFaceLocation} from '../../utils/utils'
 import axios from "axios";
+import Toast from '../Toast/Toast';
 
 
-class HomePage extends React.Component {
-    constructor() {
-        super();
-        this.state = {
-            prevInput: '',
-            input: '',
-            imageUrl: '',
-            box: {},
-        }
-    }
-    
-      displayFaceBox = (box) => {
-        this.setState({box: box});
+class HomePage extends Component {
+      state = {
+        prevInput: '',
+        input: '',
+        imageUrl: '',
+        box: {},
       }
+
+      displayFaceBox = (box) => this.setState({box});
+      
     
     onBtnSubmit = async () => {
       const { currentUser } = this.props;
@@ -37,32 +33,29 @@ class HomePage extends React.Component {
           const response = await axios.post(`${apiURL}/imageurl`, {input});
           if (response.data) {
             const res = await axios.put(`${apiURL}/image`, {id: currentUser.id});
-            this.setState(Object.assign(currentUser, {entries: res.data}));
+            this.setState(Object.assign(currentUser, {entries: res.data.entries}));
           }
           this.displayFaceBox(calculateFaceLocation(response.data));
         } catch(err){
-          err.response.data ? alert(err.response.data) : console.log(err)
+          Toast('Error occured', 'error',err.response.data.msg);
         }
       }
     }
     
-    onInputChange = (event) => {
-        this.setState({input: event.target.value});
-    }
+    onInputChange = ({target: { value }}) => this.setState({input: value});
 
   render () {
     const {imageUrl, box} = this.state;
-    const {currentUser} = this.props;
+    const {currentUser: {name, entries}} = this.props;
     return ( 
         <>
-        <ModalPopup />
-        <Logo />
-        <Rank name={currentUser.name} entries={currentUser.entries}/>
-        <ImageLinkForm 
-            onInputChange={this.onInputChange}
-            onBtnSubmit={this.onBtnSubmit}
-        />
-        <FaceRecognition imageUrl={imageUrl} box={box}/>
+          <Logo />
+          <Rank name={name} entries={entries}/>
+          <ImageLinkForm 
+              onInputChange={this.onInputChange}
+              onBtnSubmit={this.onBtnSubmit}
+          />
+          <FaceRecognition imageUrl={imageUrl} box={box}/>
         </>
       );
     }

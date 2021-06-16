@@ -1,23 +1,32 @@
-import React from "react";
-import "./FaceRecognition.css";
+import { Box, Image } from "@chakra-ui/react";
 
 const FaceRecognition = ({ imageUrl, box }) => {
   return (
-    <div className="center ma">
-      <div className="absolute mt2">
-        <img id="inputimg" src={imageUrl} alt="" width="500px" height="auto" />
+    <Box width='500px' position='relative' margin='auto'>
+      <Box position="absolute" mt={4}>
+        <Image id="inputimg" src={imageUrl} width="500px" height="auto" />
         <div
-          className="bounding-box"
           style={{
             top: box.topRow,
             right: box.rightCol,
             bottom: box.bottomRow,
             left: box.leftCol,
+            ...bounding_box
           }}
-        ></div>
-      </div>
-    </div>
+        />
+      </Box>
+    </Box>
   );
 };
+
+const bounding_box = {
+  position: "absolute",
+  boxShadow: "0 0 0 3px #149df2 inset",
+  display: "flex",
+  flexWrap: "wrap",
+  justifyContent: "center",
+  cursor: "pointer"
+}
+
 
 export default FaceRecognition;
