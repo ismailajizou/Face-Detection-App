@@ -10,6 +10,7 @@ import ZoomSlider from './ZoomSlider';
 import UploadButton from './UploadInput';
 import ModalFtr from './ModalFtr';
 import Toast from "../Toast/Toast";
+import axios from 'axios';
 
 class AvatarChanger extends React.Component {
 
@@ -32,29 +33,29 @@ class AvatarChanger extends React.Component {
 
     setEditorRef = (editor) => (this.editor = editor);
 
-    onClickSave = () => {
+    onClickSave = async () => {
         const { id } = this.props.currentUser;
         const {dispatch, currentUser, onClose} = this.props;
         if (this.editor) {
             const canvasScaled = this.editor.getImageScaledToCanvas().toDataURL();
-            fetch(canvasScaled)
-            .then(res => res.blob())
-            .then(blob => {
+            try{
+                const canvas = await fetch(canvasScaled);
+                const blob = await canvas.blob();
                 const fd = new FormData();
-                fd.append('image', blob, 'avatar');
-                fetch(`${apiURL}/changeProfilePic/${id}`, {
-                    method: 'POST',
-                    body: fd
-                })
-                .then(res => res.json())
-                .then(({ avatar }) => {
-                    dispatch(setCurrentUser({...currentUser, avatar}));
-                    Toast('Success', 'success', 'Profile Changed successfully')
+                fd.append('image', blob);
+                try {
+                    const { data } = await axios.post(`${apiURL}/changeProfilePic/${id}`, fd);
+
+                    dispatch(setCurrentUser({...currentUser, avatar: data.avatar }));
+                    Toast('Success', 'success', 'Profile Changed successfully');
                     onClose();
-                })
-                .catch(err => Toast('Error', 'error', err.response.data.msg));
-            })
-            .catch(err => Toast('Error', 'error', 'error while getting image'));
+                } catch (err) {
+                    Toast('Error', 'error', err.response.data.msg);
+                }
+            } catch (err) {
+                Toast('Error', 'error', 'error while getting image');
+            }
+
         } else {
             Toast('Warning', 'warning','no file to upload !!!');
         }
@@ -66,7 +67,7 @@ class AvatarChanger extends React.Component {
             <>
                 <ModalBody display='flex' flexDirection='column'>
                     {
-                        this.state.image ?
+                        image ?
                         <>
                             <AvatarEditor
                                 ref={this.setEditorRef}
@@ -97,3 +98,20 @@ const mapStateToProps = createStructuredSelector({
 })
  
 export default connect(mapStateToProps)(AvatarChanger);
+
+
+// fetch(canvasScaled)
+            // .then(res => res.blob())
+            // .then(async blob => {
+            //     const fd = new FormData();
+            //     fd.append('image', blob, 'avatar');
+            //     try {
+            //         const { avatar } = await axios.post(`${apiURL}/changeProfilePic/${id}`, fd);
+            //         dispatch(setCurrentUser({...currentUser, avatar}));
+            //         Toast('Success', 'success', 'Profile Changed successfully');
+            //         onClose();
+            //     } catch (err) {
+            //         Toast('Error', 'error', err.response.data.msg)
+            //     }
+            // })
+            // .catch(err => Toast('Error', 'error', 'error while getting image'));

@@ -13,7 +13,6 @@ import Toast from "../Toast/Toast";
 const FormContainer = ({history, setCurrentUser, page}) => {
     const [form, setForm] = useState({ name: "", email: "", password: ""});
     const [loading, setLoading] = useState(false);
-    console.log(process.env)
     const onInputChange = ({target: {name, value}}) => setForm({ ...form, [name]: value });
     
     const onSubmitSendInfo = async event => {

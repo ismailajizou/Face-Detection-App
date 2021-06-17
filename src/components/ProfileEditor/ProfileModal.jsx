@@ -9,7 +9,7 @@ const ProfileModal = ({isOpen, onClose}) => {
         <ModalContent>
           <ModalHeader textAlign='center'>Change Avatar</ModalHeader>
           <ModalCloseButton />
-          <AvatarChanger />
+          <AvatarChanger onClose={onClose}/>
         </ModalContent>
       </Modal>
     );

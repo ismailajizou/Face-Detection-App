@@ -1,6 +1,8 @@
 import { createStandaloneToast } from "@chakra-ui/toast";
 
-const Toast = (title, status, description) => createStandaloneToast()({
+const toast = createStandaloneToast();
+
+const Toast = (title, status, description) => toast({
     title,
     description,
     variant: 'solid',

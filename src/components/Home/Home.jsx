@@ -7,20 +7,21 @@ import { connect } from 'react-redux';
 import { setCurrentUser } from '../../redux/user/user-actions';
 import { createStructuredSelector } from 'reselect';
 import { selectCurrentUser } from '../../redux/user/user-selectors';
-import {apiURL, calculateFaceLocation} from '../../utils/utils'
+import {apiURL, calculateFaceLocation, getBoundingBox} from '../../utils/utils'
 import axios from "axios";
 import Toast from '../Toast/Toast';
 
 
 class HomePage extends Component {
-      state = {
-        prevInput: '',
-        input: '',
-        imageUrl: '',
-        box: {},
-      }
+    state = {
+      prevInput: '',
+      input: '',
+      imageUrl: '',
+      face: {},
+      box: {},
+    }
 
-      displayFaceBox = (box) => this.setState({box});
+    displayFaceBox = (box) => this.setState({box});
       
     
     onBtnSubmit = async () => {
@@ -35,7 +36,9 @@ class HomePage extends Component {
             const res = await axios.put(`${apiURL}/image`, {id: currentUser.id});
             this.setState(Object.assign(currentUser, {entries: res.data.entries}));
           }
-          this.displayFaceBox(calculateFaceLocation(response.data));
+          const face = calculateFaceLocation(response.data);
+          this.setState({face});
+          this.displayFaceBox(getBoundingBox(face));
         } catch(err){
           Toast('Error occured', 'error',err.response.data.msg);
         }
@@ -45,7 +48,7 @@ class HomePage extends Component {
     onInputChange = ({target: { value }}) => this.setState({input: value});
 
   render () {
-    const {imageUrl, box} = this.state;
+    const {imageUrl, box, face} = this.state;
     const {currentUser: {name, entries}} = this.props;
     return ( 
         <>
@@ -55,7 +58,7 @@ class HomePage extends Component {
               onInputChange={this.onInputChange}
               onBtnSubmit={this.onBtnSubmit}
           />
-          <FaceRecognition imageUrl={imageUrl} box={box}/>
+          <FaceRecognition displayFaceBox={this.displayFaceBox} imageUrl={imageUrl} box={box} face={face}/>
         </>
       );
     }
