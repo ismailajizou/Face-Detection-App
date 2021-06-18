@@ -13,7 +13,6 @@ import Toast from "../Toast/Toast";
 import axios from 'axios';
 
 class AvatarChanger extends React.Component {
-
     state = {
         image: "",
         allowZoomOut: false,
@@ -45,7 +44,6 @@ class AvatarChanger extends React.Component {
                 fd.append('image', blob);
                 try {
                     const { data } = await axios.post(`${apiURL}/changeProfilePic/${id}`, fd);
-
                     dispatch(setCurrentUser({...currentUser, avatar: data.avatar }));
                     Toast('Success', 'success', 'Profile Changed successfully');
                     onClose();
@@ -55,7 +53,6 @@ class AvatarChanger extends React.Component {
             } catch (err) {
                 Toast('Error', 'error', 'error while getting image');
             }
-
         } else {
             Toast('Warning', 'warning','no file to upload !!!');
         }

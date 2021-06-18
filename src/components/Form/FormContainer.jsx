@@ -9,10 +9,10 @@ import FormContent from "./FormContent";
 import { withRouter } from "react-router";
 import Toast from "../Toast/Toast";
 
-
 const FormContainer = ({history, setCurrentUser, page}) => {
     const [form, setForm] = useState({ name: "", email: "", password: ""});
     const [loading, setLoading] = useState(false);
+
     const onInputChange = ({target: {name, value}}) => setForm({ ...form, [name]: value });
     
     const onSubmitSendInfo = async event => {
@@ -31,30 +31,27 @@ const FormContainer = ({history, setCurrentUser, page}) => {
         }
     };    
 
+    return ( 
+        loading ? 
+        <MainSpinner />
+        :
+        <Flex as="form" onSubmit={onSubmitSendInfo} {...stylesheet.formStyles}>
+            <FormContent page={page} onInputChange={onInputChange}/>
+        </Flex>
+    );
+}
 
-        return ( 
-            loading ? 
-            <MainSpinner />
-            :
-            <Flex as="form" 
-            border="1px solid rgba(0, 0, 0, .1)"
-            borderRadius="xl"
-            w={["90%","70%","40%","30%" ,"20%"]}
-            margin='auto'
-            padding='8'
-            marginY='7rem'
-            boxShadow='4px 4px 8px 0px rgba( 0, 0, 0, 0.2 )'
-            direction='column' 
-            onSubmit={onSubmitSendInfo}
-            >
-
-                <FormContent 
-                    page={page} 
-                    onInputChange={onInputChange}
-                />
-
-            </Flex>
-         );
+const stylesheet = {
+    formStyles: {
+        border: "1px solid rgba(0, 0, 0, .1)",
+        borderRadius: "xl",
+        width: ["90%","70%","40%","30%" ,"20%"] ,
+        marginX: 'auto',
+        padding: '8',
+        marginY: '7rem',
+        boxShadow: '4px 4px 8px 0px rgba( 0, 0, 0, 0.2 )',
+        direction: 'column' 
+    }
 }
  
 const mapDispatchToProps = dispatch => ({

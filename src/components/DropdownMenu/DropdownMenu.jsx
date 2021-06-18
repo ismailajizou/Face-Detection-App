@@ -28,7 +28,6 @@ const DropdownMenu = ({ dispatch, history }) => {
         <MenuItem fontSize="lg" onClick={onAccountModalOpen} py={0}>
           My Account
         </MenuItem>
-        
         <MenuDivider />
         <MenuItem fontSize="lg" onClick={onProfileModalOpen} py={0}>
           Profile

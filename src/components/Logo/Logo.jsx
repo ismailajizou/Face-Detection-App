@@ -12,7 +12,7 @@ const Logo = () => {
                 width: '90%',
                 border: '1px solid white',
                 borderRadius: '0.6rem'
-                }}>
+            }}>
                 <Box display='flex' alignItems='center' justifyContent='center' h='100%' w="100%">
                     <Image src={brain} />
                 </Box>

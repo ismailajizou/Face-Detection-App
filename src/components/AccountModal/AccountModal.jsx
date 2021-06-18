@@ -11,7 +11,7 @@ import {
 import AccountModalContent from "./AccountModalContent";
 import axios from 'axios';
 import { connect } from 'react-redux';
-import {apiURL} from '../../utils/utils'
+import { apiURL } from '../../utils/utils'
 import Toast from '../Toast/Toast';
 import { setCurrentUser } from '../../redux/user/user-actions';
 

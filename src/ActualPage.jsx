@@ -12,9 +12,11 @@ const ActualPage = ({ currentUser }) => {
     return ( 
         <Switch>
             <Suspense fallback={<MainSpinner />}>
+
             <Route exact path="/signin" >
                 <FormContainer page='signin' />
             </Route>
+            
             <Route exact path="/register" >
                 <FormContainer page='register' />
             </Route>

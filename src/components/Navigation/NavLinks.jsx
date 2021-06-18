@@ -1,7 +1,6 @@
 import { Flex } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 
-
 const NavLinks = () => {
     return ( 
         <Flex as="nav" justifyContent='flex-end' h="20" alignItems='center'>
@@ -16,8 +15,8 @@ const NavLinks = () => {
 }
 
 const stylesheet = {
-        fontSize: "1.5rem",
-        marginRight: '2rem'
+    fontSize: "1.5rem",
+    marginRight: '2rem'
 }
  
 export default NavLinks;

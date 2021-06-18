@@ -11,9 +11,7 @@ const particlesParams = {
 
 const App = () => {
   return (
-    <Box h="100%" 
-      w="100%"
-      textAlign="center">
+    <Box h="100%" w="100%" textAlign="center">
       <Particles width="auto" params={particlesParams} id="particles" />
       <Navigation />
       <ActualPage />

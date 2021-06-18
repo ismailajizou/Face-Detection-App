@@ -21,9 +21,10 @@ class HomePage extends Component {
       box: {},
     }
 
-    displayFaceBox = (box) => this.setState({box});
+    onInputChange = ({target: { value }}) => this.setState({input: value});
+
+    displayFaceBox = (box) => this.setState({ box });
       
-    
     onBtnSubmit = async () => {
       const { currentUser } = this.props;
       const { input, prevInput }= this.state;
@@ -40,12 +41,10 @@ class HomePage extends Component {
           this.setState({face});
           this.displayFaceBox(getBoundingBox(face));
         } catch(err){
-          Toast('Error occured', 'error',err.response.data.msg);
+          Toast('Error occured', 'error', err.response.data.msg);
         }
       }
     }
-    
-    onInputChange = ({target: { value }}) => this.setState({input: value});
 
   render () {
     const {imageUrl, box, face} = this.state;
