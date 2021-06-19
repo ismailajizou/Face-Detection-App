@@ -3,7 +3,6 @@ import Tilt from 'react-tilt';
 import brain from './brain.png';
 
 const Logo = () => {
-    
     return (
         <Box m="1rem 2rem" w="9rem" h='9rem'>
             <Tilt style={{

@@ -29,7 +29,7 @@ const AccountModalContent = ({ currentUser: { name, email, joined, avatar }, del
             (
                 <>
                     <Text m="3">To delete this Account you must enter your password and hit the delete button.</Text>
-                    <Input placeholder='Enter you password' type="password" onChange={(e) => handleChange(e.target.value)} />
+                    <Input placeholder='Enter you password' borderColor='black'  type="password" onChange={(e) => handleChange(e.target.value)} />
                 </>
             )
         }
