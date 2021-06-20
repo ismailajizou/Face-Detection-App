@@ -14,13 +14,15 @@ import Toast from '../Toast/Toast';
 
 const HomePage = ({currentUser, dispatch}) => {
   const [input, setInput] = useState('');
-  const [imageUrl, setimageUrl] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
   const [faces, setFaces] = useState([]);
+  const [loading, setLoading] = useState(false);
   
   const onInputChange = ({target: { value }}) => setInput(value);
     
   const onBtnSubmit = async () => {
-    setimageUrl(input);
+    setLoading(true);
+    setImageUrl(input);
     try {
       const response = await axios.post(`${apiURL}/imageurl`, { input });
       if (response.data) {
@@ -31,6 +33,8 @@ const HomePage = ({currentUser, dispatch}) => {
       setFaces(facesArr);
     } catch(err){
       Toast('Error occured', 'error', err.response.data.msg);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -38,7 +42,7 @@ const HomePage = ({currentUser, dispatch}) => {
     <>
       <Logo />
       <Rank name={currentUser.name} entries={currentUser.entries}/>
-      <ImageLinkForm onInputChange={onInputChange} onBtnSubmit={onBtnSubmit}/>
+      <ImageLinkForm onInputChange={onInputChange} onBtnSubmit={onBtnSubmit} loading={loading} />
       <FaceRecognition imageUrl={imageUrl} faces={faces}/>
     </>
   );

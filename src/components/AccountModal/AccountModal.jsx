@@ -18,6 +18,7 @@ import { setCurrentUser } from '../../redux/user/user-actions';
 const AccountModal = ({ isOpen, onClose, currentUser: {id}, dispatch }) => {
   const [deleteMode, setDeleteMode] = useState(false);
   const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleClose = () => {
     setDeleteMode(false);
@@ -28,13 +29,16 @@ const AccountModal = ({ isOpen, onClose, currentUser: {id}, dispatch }) => {
     if(!deleteMode){
       setDeleteMode(true);
     } else {
+      setLoading(true);
       try {
         const { data } = await axios.post(`${apiURL}/deleteAccount/${id}`, {password: input});
         if(data.success){
+          setLoading(false);
           dispatch(setCurrentUser(null));
           Toast('Success', 'success', data.msg);
         }
       } catch (err) {
+        setLoading(false);
         Toast('Error occured', 'error', err.response.data.msg);
       }
     }
@@ -50,7 +54,7 @@ const AccountModal = ({ isOpen, onClose, currentUser: {id}, dispatch }) => {
             <AccountModalContent deleteMode={deleteMode} setDeleteMode={setDeleteMode} handleChange={setInput} />
 
             <ModalFooter>
-              <Button colorScheme="red" mr={3} onClick={(e) => handleClick(e)}>Delete account</Button>
+              <Button colorScheme="red" mr={3} isLoading={loading} loadingText='Deleting' onClick={(e) => handleClick(e)}>Delete account</Button>
             </ModalFooter>
           </ModalContent>
       </Modal>

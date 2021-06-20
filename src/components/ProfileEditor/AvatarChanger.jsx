@@ -23,6 +23,7 @@ class AvatarChanger extends React.Component {
         preview: null,
         width: 200,
         height: 200,
+        loading: false
     }
     handleNewImage = e => this.setState({ image: e.target.files[0] });
     
@@ -36,6 +37,7 @@ class AvatarChanger extends React.Component {
         const { id } = this.props.currentUser;
         const {dispatch, currentUser, onClose} = this.props;
         if (this.editor) {
+            this.setState({loading: true});
             const canvasScaled = this.editor.getImageScaledToCanvas().toDataURL();
             try{
                 const canvas = await fetch(canvasScaled);
@@ -53,13 +55,14 @@ class AvatarChanger extends React.Component {
             } catch (err) {
                 Toast('Error', 'error', 'error while getting image');
             }
+            this.setState({loading: false});
         } else {
             Toast('Warning', 'warning','no file to upload !!!');
         }
     }
 
     render() { 
-        const { scale, width, height, position, rotate, borderRadius, image, allowZoomOut } = this.state;
+        const { scale, width, height, position, rotate, borderRadius, image, allowZoomOut, loading } = this.state;
         return ( 
             <>
                 <ModalBody display='flex' flexDirection='column'>
@@ -84,7 +87,7 @@ class AvatarChanger extends React.Component {
                     }
                     <UploadButton handleNewImage={this.handleNewImage} />
                 </ModalBody>
-                <ModalFtr onClickSave={this.onClickSave} />
+                <ModalFtr onClickSave={this.onClickSave} loading={loading} />
             </>
          );
     }
