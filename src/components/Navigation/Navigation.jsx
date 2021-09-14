@@ -1,12 +1,12 @@
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import { useUser } from '../../context/userContext';
 import NavAvatar from './NavAvatar';
 import NavLinks from './NavLinks';
 
-const Navigation = ({location, currentUser}) => {
+const Navigation = () => {
+    const location = useLocation();
+    const {currentUser} = useUser();
     return (location.pathname === '/' && currentUser) ? <NavAvatar avatar={currentUser.avatar} /> : <NavLinks />;
 }
 
-const mapStateToProps = ({user: {currentUser}}) => ({currentUser});
-
-export default withRouter(connect(mapStateToProps)(Navigation));
+export default Navigation;

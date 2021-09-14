@@ -2,11 +2,9 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
 import reportWebVitals from './reportWebVitals';
-import { Provider } from "react-redux";
 import { ColorModeScript, ChakraProvider, extendTheme } from '@chakra-ui/react';
 import { BrowserRouter } from "react-router-dom";
-import  { store, persistor } from './redux/store';
-import { PersistGate } from 'redux-persist/integration/react';
+import UserProvider from "./context/userContext";
 import "./index.css";
 
 const config = {
@@ -16,16 +14,14 @@ const config = {
 const theme = extendTheme({ config })
 
 ReactDOM.render(
-  <Provider store={store}>
     <BrowserRouter>
       <ChakraProvider theme={theme} resetCSS>
       <ColorModeScript initialColorMode={theme.config.initialColorMode} />
-          <PersistGate persistor={persistor}>
-            <App /> 
-          </PersistGate>
+      <UserProvider>
+        <App /> 
+      </UserProvider>
       </ChakraProvider>
-    </BrowserRouter>
-  </Provider>,
+    </BrowserRouter>,
   document.getElementById("root")
 );
 

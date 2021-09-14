@@ -3,16 +3,14 @@ import Logo from '../Logo/Logo';
 import ImageLinkForm from '../ImageLinkForm/ImageLinkForm';
 import Rank from '../Rank/Rank';
 import FaceRecognition from '../FaceRecognition/FaceRecognition';
-import { connect } from 'react-redux';
-import { setCurrentUser } from '../../redux/user/user-actions';
-import { createStructuredSelector } from 'reselect';
-import { selectCurrentUser } from '../../redux/user/user-selectors';
 import {apiURL, getDetectedFaces } from '../../utils/utils'
 import axios from "axios";
 import Toast from '../Toast/Toast';
+import { setItem, useUser } from '../../context/userContext';
 
 
-const HomePage = ({currentUser, dispatch}) => {
+const HomePage = () => {
+  const { currentUser, setCurrentUser } = useUser();
   const [input, setInput] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [faces, setFaces] = useState([]);
@@ -27,7 +25,8 @@ const HomePage = ({currentUser, dispatch}) => {
       const response = await axios.post(`${apiURL}/imageurl`, { input });
       if (response.data) {
         const res = await axios.put(`${apiURL}/image`, {id: currentUser.id});
-        dispatch(setCurrentUser(Object.assign(currentUser, {entries: res.data.entries})));
+        setCurrentUser(Object.assign(currentUser, {entries: res.data.entries}));
+        setItem('user', currentUser);
       }
       const facesArr = getDetectedFaces(response.data);
       setFaces(facesArr);
@@ -48,6 +47,5 @@ const HomePage = ({currentUser, dispatch}) => {
   );
 }
 
-const mapStateToProps = createStructuredSelector({ currentUser: selectCurrentUser });
  
-export default connect(mapStateToProps)(HomePage);
+export default HomePage;

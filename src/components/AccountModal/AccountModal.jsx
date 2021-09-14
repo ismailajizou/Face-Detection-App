@@ -10,15 +10,15 @@ import {
   } from "@chakra-ui/react"
 import AccountModalContent from "./AccountModalContent";
 import axios from 'axios';
-import { connect } from 'react-redux';
 import { apiURL } from '../../utils/utils'
 import Toast from '../Toast/Toast';
-import { setCurrentUser } from '../../redux/user/user-actions';
+import { useUser } from '../../context/userContext';
 
-const AccountModal = ({ isOpen, onClose, currentUser: {id}, dispatch }) => {
+const AccountModal = ({ isOpen, onClose }) => {
   const [deleteMode, setDeleteMode] = useState(false);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const { currentUser,setCurrentUser } = useUser();
 
   const handleClose = () => {
     setDeleteMode(false);
@@ -31,10 +31,10 @@ const AccountModal = ({ isOpen, onClose, currentUser: {id}, dispatch }) => {
     } else {
       setLoading(true);
       try {
-        const { data } = await axios.post(`${apiURL}/deleteAccount/${id}`, {password: input});
+        const { data } = await axios.post(`${apiURL}/deleteAccount/${currentUser.id}`, {password: input});
         if(data.success){
           setLoading(false);
-          dispatch(setCurrentUser(null));
+          setCurrentUser(null);
           Toast('Success', 'success', data.msg);
         }
       } catch (err) {
@@ -61,6 +61,5 @@ const AccountModal = ({ isOpen, onClose, currentUser: {id}, dispatch }) => {
     );
 }
 
-const mapStateToProps = ({user: {currentUser}}) => ({currentUser});
  
-export default connect(mapStateToProps)(AccountModal);
+export default AccountModal;

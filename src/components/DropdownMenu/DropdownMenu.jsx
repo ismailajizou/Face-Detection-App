@@ -1,12 +1,13 @@
 import { MenuList, MenuItem, MenuDivider, useDisclosure } from "@chakra-ui/react";
-import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
-import { setCurrentUser } from "../../redux/user/user-actions";
+import { useHistory } from "react-router-dom";
+import { setItem, useUser } from "../../context/userContext";
 import AccountModal from '../AccountModal/AccountModal';
 import ProfileModal from "../ProfileEditor/ProfileModal";
 
 
-const DropdownMenu = ({ dispatch, history }) => {
+const DropdownMenu = () => {
+  const history = useHistory();
+  const { setCurrentUser } = useUser()
   const { 
     isOpen: isAccountModalOpen, 
     onOpen: onAccountModalOpen, 
@@ -20,9 +21,11 @@ const DropdownMenu = ({ dispatch, history }) => {
   } = useDisclosure();
 
   const logout = () => {
-    dispatch(setCurrentUser(null));
+    setItem('user', null);
+    setCurrentUser(null);
     history.push('/signin');
   }
+  
   return (
       <MenuList bgColor='rgba(255, 255, 255, 0.5)' minW="auto" ml='-6rem'>
         <MenuItem fontSize="lg" onClick={onAccountModalOpen} py={0}>
@@ -43,4 +46,4 @@ const DropdownMenu = ({ dispatch, history }) => {
 };
 
 
-export default withRouter(connect()(DropdownMenu));
+export default DropdownMenu;

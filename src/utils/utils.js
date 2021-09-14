@@ -1,4 +1,4 @@
-export const apiURL = (process.env.NODE_ENV === "development") ? "http://localhost:3000" : "https://vast-bastion-34313.herokuapp.com";
+export const apiURL = process.env.REACT_APP_API_URL;
 
 export const getDetectedFaces = (data) => data.outputs[0].data.regions;
 

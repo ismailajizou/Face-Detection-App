@@ -1,4 +1,3 @@
-
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton } from "@chakra-ui/react";
 import AvatarChanger from "./AvatarChanger";
 

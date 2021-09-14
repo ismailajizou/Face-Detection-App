@@ -1,15 +1,16 @@
 import { useState } from "react";
-import { connect } from "react-redux";
-import { setCurrentUser } from "../../redux/user/user-actions";
 import MainSpinner from "../Spinners/MainSpinner";
 import {apiURL} from '../../utils/utils'
 import axios from "axios";
 import { Flex } from "@chakra-ui/layout";
 import FormContent from "./FormContent";
-import { withRouter } from "react-router";
+import { useHistory } from "react-router";
 import Toast from "../Toast/Toast";
+import { setItem, useUser } from "../../context/userContext";
 
-const FormContainer = ({history, setCurrentUser, page}) => {
+const FormContainer = ({ page }) => {
+    const history = useHistory();
+    const { setCurrentUser } = useUser();
     const [form, setForm] = useState({ name: "", email: "", password: ""});
     const [loading, setLoading] = useState(false);
 
@@ -24,6 +25,7 @@ const FormContainer = ({history, setCurrentUser, page}) => {
                 setCurrentUser(res.data.user);
                 setLoading(false);  
                 history.push("/");
+                setItem('user', res.data.user);
             }
         } catch(err){
             setLoading(false);
@@ -54,7 +56,4 @@ const stylesheet = {
     }
 }
  
-const mapDispatchToProps = dispatch => ({
-    setCurrentUser: user => dispatch(setCurrentUser(user)),
-});
-export default withRouter(connect(null, mapDispatchToProps)(FormContainer));
+export default FormContainer;
